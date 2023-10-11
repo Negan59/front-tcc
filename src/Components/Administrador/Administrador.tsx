@@ -26,7 +26,7 @@ const Administrador: React.FC = () => {
   }, [currentPage, pageSize]);
 
   const contar = () => {
-    const url = 'http://tcc-guilherme.azurewebsites.net/api/paciente/qtd';
+    const url = 'https://tcc-guilherme.azurewebsites.net/api/paciente/qtd';
 
     fetch(url)
       .then((response) => response.json())
@@ -41,7 +41,7 @@ const Administrador: React.FC = () => {
   const buscar = () => {
     // Calcule o índice inicial com base na página atual e no tamanho da página
     const startIndex = (currentPage - 1) * pageSize;
-    const url = `http://tcc-guilherme.azurewebsites.net/api/paciente/pag?start=${startIndex}&limit=${pageSize}`;
+    const url = `https://tcc-guilherme.azurewebsites.net/api/paciente/pag?start=${startIndex}&limit=${pageSize}`;
 
     setPatients([]); // Limpe os pacientes enquanto busca
 

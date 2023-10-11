@@ -36,7 +36,7 @@ const Perfil: React.FC = () => {
     const [showFMSModal, setShowFMSModal] = useState<boolean>(false);
 
     useEffect(() => {
-        fetch(`http://tcc-guilherme.azurewebsites.net/api/paciente/${pacienteId}`)
+        fetch(`https://tcc-guilherme.azurewebsites.net/api/paciente/${pacienteId}`)
             .then((response) => response.json())
             .then((data) => {
                 setPaciente(data);
