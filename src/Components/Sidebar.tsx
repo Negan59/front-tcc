@@ -12,7 +12,7 @@ import {
 import { Link } from 'react-router-dom';
 
 import '../Styles/app.css';
-
+const { SubMenu } = Menu;
 const { Sider } = Layout;
 
 interface SidebarProps {
@@ -39,9 +39,14 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed = false }) => {
         <Menu.Item key="home" icon={<HomeOutlined />}>
           <Link to="/">Home</Link>
         </Menu.Item>
-        <Menu.Item key="desktop" icon={<DesktopOutlined />}>
-          <Link to="/monitor">Monitores</Link>
-        </Menu.Item>
+        <SubMenu key="cadastro" icon={<TeamOutlined />} title="Cadastro">
+          <Menu.Item key="desktop" icon={<DesktopOutlined />}>
+            <Link to="/monitor">Monitores</Link>
+          </Menu.Item>
+          <Menu.Item key="patient" icon={<UserOutlined />}>
+            <Link to="/paciente">Pacientes</Link>
+          </Menu.Item>
+        </SubMenu>
         <Menu.Item key="admin" icon={<ControlOutlined />}>
           <Link to="/adm">Painel do Administrador</Link>
         </Menu.Item>
@@ -50,9 +55,6 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed = false }) => {
         </Menu.Item>
         <Menu.Item key="start" icon={<PlayCircleOutlined />}>
           <Link to="/animation">Iniciar</Link>
-        </Menu.Item>
-        <Menu.Item key="patient" icon={<UserOutlined />}>
-          <Link to="/paciente">Pacientes</Link>
         </Menu.Item>
         {/* Elemento "Criar Exercício" com ícone */}
         <Menu.Item key="create-exercise" icon={<PlusCircleOutlined />}>
