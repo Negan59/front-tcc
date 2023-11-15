@@ -3,6 +3,12 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+export { PoseSolver as Pose } from "./PoseSolver";
+export { HandSolver as Hand } from "./HandSolver";
+export { FaceSolver as Face } from "./FaceSolver";
+export { default as Vector } from "./utils/vector";
+export * as Utils from "./utils/helpers";
+export * from "./Types";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

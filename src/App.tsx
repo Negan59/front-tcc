@@ -8,6 +8,7 @@ import Monitor from './Components/Monitor/Monitor';
 import Paciente from './Components/Paciente/Paciente'
 import Administrador from './Components/Administrador/Administrador';
 import Perfil from './Components/Perfil/Perfil';
+import Avatar from './Components/Avatar/Avatar';
 
 const { Content } = Layout;
 
@@ -30,7 +31,7 @@ function App() {
                 <h1>Página Principal</h1>
                 <button onClick={toggleSidebar}>Toggle Sidebar</button>
               </div>} />
-              <Route path="/animation" element={<Iniciar />} /> {/* Rota para a página de animação */}
+              <Route path="/animation" element={<Avatar />} /> {/* Rota para a página de animação */}
               <Route path="/monitor" element={<Monitor />} /> {/* Rota para a página de animação */}
               <Route path="/paciente" element={<Paciente />} /> {/* Rota para a página de animação */}
               <Route path="/adm" element={<Administrador />} /> {/* Rota para a página de animação */}

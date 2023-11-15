@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Avatar, Card, Typography, Button, Modal } from 'antd';
+import { Row, Col, Avatar, Card, Typography, Button, Modal, Radio } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { useParams } from 'react-router-dom';
 import './Perfil.css';
+import FMSModal from './FMSModal';
 
 const { Title, Text } = Typography;
 
@@ -34,9 +35,13 @@ const Perfil: React.FC = () => {
     const [showGMFCSModal, setShowGMFCSModal] = useState<boolean>(false);
     const [showMACSModal, setShowMACSModal] = useState<boolean>(false);
     const [showFMSModal, setShowFMSModal] = useState<boolean>(false);
+    const [selectedOption, setSelectedOption] = useState<string | null>(null);
+    const [selectedOption2, setSelectedOption2] = useState<string | null>(null);
+    const [selectedOption3, setSelectedOption3] = useState<string | null>(null);
+
 
     useEffect(() => {
-        fetch(`https://tcc-guilherme.azurewebsites.net/api/paciente/${pacienteId}`)
+        fetch(`http://localhost:8080/api/paciente/${pacienteId}`)
             .then((response) => response.json())
             .then((data) => {
                 setPaciente(data);
@@ -79,6 +84,8 @@ const Perfil: React.FC = () => {
     const handleShowFMSModal = () => {
         setShowFMSModal(true);
     };
+
+
 
     return (
         <div>
@@ -178,22 +185,16 @@ const Perfil: React.FC = () => {
                 title="GMFCS - Editar Resultado"
                 visible={showGMFCSModal}
                 onCancel={() => setShowGMFCSModal(false)}
-                // Implemente o conteúdo do modal GMFCS aqui
+            // Implemente o conteúdo do modal GMFCS aqui
             />
 
             <Modal
                 title="MACS - Editar Resultado"
                 visible={showMACSModal}
                 onCancel={() => setShowMACSModal(false)}
-                // Implemente o conteúdo do modal MACS aqui
+            // Implemente o conteúdo do modal MACS aqui
             />
-
-            <Modal
-                title="FMS - Editar Resultado"
-                visible={showFMSModal}
-                onCancel={() => setShowFMSModal(false)}
-                // Implemente o conteúdo do modal FMS aqui
-            />
+            <FMSModal showFMSModal={showFMSModal} idpaciente = {paciente?.id} setShowFMSModal={setShowFMSModal} />
         </div>
     );
 };
