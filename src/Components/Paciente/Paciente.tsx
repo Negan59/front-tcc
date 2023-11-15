@@ -40,7 +40,7 @@ function App() {
     const buscar = () => {
         setSucessoMessage(null);
         setErroMessage(null);
-        fetch('http://localhost:8080/api/paciente')
+        fetch('https://gui-tcc.azurewebsites.net/api/paciente')
             .then((response) => response.json())
             .then((data) => {
                 setPacientes(data);
@@ -60,7 +60,7 @@ function App() {
 
     const handleExcluir = (record: number) => {
         const idPaciente = record;
-        fetch(`http://localhost:8080/api/paciente/${idPaciente}`, {
+        fetch(`https://gui-tcc.azurewebsites.net/api/paciente/${idPaciente}`, {
             method: 'DELETE',
         })
             .then(() => {
@@ -76,10 +76,10 @@ function App() {
     };
 
     const handleCadastroSubmit = async (formData: FormData) => {
-        let url = 'http://localhost:8080/api/paciente'
+        let url = 'https://gui-tcc.azurewebsites.net/api/paciente'
         if (editingPaciente) {
             formData.append('id', ""+editingPaciente.id);
-            url = 'http://localhost:8080/api/pacientea'
+            url = 'https://gui-tcc.azurewebsites.net/api/pacientea'
         }
         console.log(url)
         console.log('\n\nFoto')
@@ -120,7 +120,7 @@ function App() {
     const buscarPorNome = () => {
         setSucessoMessage(null);
         setErroMessage(null);
-        fetch(`http://localhost:8080/api/pacientenome?nome=${searchValue}`)
+        fetch(`https://gui-tcc.azurewebsites.net/api/pacientenome?nome=${searchValue}`)
             .then((response) => response.json())
             .then((data) => {
                 setPacientes(data);

@@ -41,7 +41,7 @@ const Perfil: React.FC = () => {
 
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/paciente/${pacienteId}`)
+        fetch(`https://gui-tcc.azurewebsites.net/api/paciente/${pacienteId}`)
             .then((response) => response.json())
             .then((data) => {
                 setPaciente(data);

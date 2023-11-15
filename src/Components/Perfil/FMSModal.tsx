@@ -78,7 +78,7 @@ const FMSModal: React.FC<{ showFMSModal: boolean; idpaciente: Number | undefined
   const saveQuestionnaire = async () => {
     let hasCompletedFMS = false;
 
-    await fetch(`http://localhost:8080/api/fms/${idpaciente}`)
+    await fetch(`https://gui-tcc.azurewebsites.net/api/fms/${idpaciente}`)
       .then((response) => response.json())
       .then((data) => {
         console.log(data)
@@ -107,7 +107,7 @@ const FMSModal: React.FC<{ showFMSModal: boolean; idpaciente: Number | undefined
           descricao,
         };
 
-        await fetch('http://localhost:8080/api/fms', {
+        await fetch('https://gui-tcc.azurewebsites.net/api/fms', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

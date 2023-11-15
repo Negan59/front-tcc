@@ -45,7 +45,7 @@ function App() {
   const buscar = () => {
     setSucessoMessage(null); // Definir mensagem de sucesso
     setErroMessage(null); // Limpar mensagem de erro
-    fetch('http://localhost:8080/api/monitor')
+    fetch('https://gui-tcc.azurewebsites.net/api/monitor')
       .then((response) => response.json())
       .then((data) => {
         setMonitores(data);
@@ -65,7 +65,7 @@ function App() {
 
   const handleExcluir = (record: Number) => {
     const idMonitor = record;
-    fetch(`http://localhost:8080/api/monitor/${idMonitor}`, {
+    fetch(`https://gui-tcc.azurewebsites.net/api/monitor/${idMonitor}`, {
       method: 'DELETE',
     })
       .then((response) => {
@@ -84,7 +84,7 @@ function App() {
   const handleCadastroSubmit = (values: MonitorData) => {
     if (editingMonitor) {
       values.id = editingMonitor.id;
-      fetch(`http://localhost:8080/api/monitor`, {
+      fetch(`https://gui-tcc.azurewebsites.net/api/monitor`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -105,7 +105,7 @@ function App() {
           setErroMessage('Erro ao atualizar monitor'); // Definir mensagem de erro
         });
     } else {
-      fetch('http://localhost:8080/api/monitor', {
+      fetch('https://gui-tcc.azurewebsites.net/api/monitor', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -137,7 +137,7 @@ function App() {
   const buscarPorNome = () => {
     setSucessoMessage(null);
     setErroMessage(null);
-    fetch(`http://localhost:8080/api/monitornome?nome=${searchValue}`)
+    fetch(`https://gui-tcc.azurewebsites.net/api/monitornome?nome=${searchValue}`)
       .then((response) => response.json())
       .then((data) => {
         setMonitores(data);
