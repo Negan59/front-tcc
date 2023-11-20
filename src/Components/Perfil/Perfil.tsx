@@ -33,14 +33,16 @@ const Perfil: React.FC = () => {
     const [imc, setImc] = useState<number | null>(null);
 
     const [showGMFCSModal, setShowGMFCSModal] = useState<boolean>(false);
-    const [showMACSModal, setShowMACSModal] = useState<boolean>(false);
     const [showFMSModal, setShowFMSModal] = useState<boolean>(false);
-    const [selectedOption, setSelectedOption] = useState<string | null>(null);
-    const [selectedOption2, setSelectedOption2] = useState<string | null>(null);
-    const [selectedOption3, setSelectedOption3] = useState<string | null>(null);
+    const [resultadosFMS, setResultadosFMS] = useState<{ [key: string]: string }>({
+        '5m': '',
+        '50m': '',
+        '500m': '',
+    });
 
 
     useEffect(() => {
+        buscarResultadosFMS()
         fetch(`https://gui-tcc.azurewebsites.net/api/paciente/${pacienteId}`)
             .then((response) => response.json())
             .then((data) => {
@@ -77,16 +79,64 @@ const Perfil: React.FC = () => {
         setShowGMFCSModal(true);
     };
 
-    const handleShowMACSModal = () => {
-        setShowMACSModal(true);
-    };
 
     const handleShowFMSModal = () => {
         setShowFMSModal(true);
     };
 
+    
 
+    const handleExcluirTesteFMS = async () => {
+        try {
+            const response = await fetch(`https://gui-tcc.azurewebsites.net/api/fms/apagar/${pacienteId}`, {
+                method: 'DELETE'
+            });
+    
+            if (response.ok) {
+                alert('Resultados do teste FMS excluídos com sucesso!');
+                setResultadosFMS({
+                    '5m': '',
+                    '50m': '',
+                    '500m': '',
+                });
+            } else {
+                throw new Error('Falha ao excluir os resultados do teste FMS');
+            }
+        } catch (error) {
+            console.error('Erro ao excluir os resultados do teste FMS:', error);
+            alert('Erro ao excluir os resultados do teste FMS.');
+        }
+    };
 
+    const handleRefazerTesteFMS = async () => {
+        await handleExcluirTesteFMS();
+        setResultadosFMS({
+            '5m': '',
+            '50m': '',
+            '500m': '',
+        });
+        setShowFMSModal(true)
+    };
+
+    const buscarResultadosFMS = async () => {
+        try {
+            const response = await fetch(`https://gui-tcc.azurewebsites.net/api/fms/${pacienteId}`);
+
+            if (response.ok) {
+                const data = await response.json();
+                let resultado = {
+                    '5m': data[0].descricao,
+                    '50m': data[1].descricao,
+                    '500m': data[2].descricao,
+                }
+                setResultadosFMS(resultado)
+            } else {
+                throw new Error('Falha ao buscar os resultados do teste FMS');
+            }
+        } catch (error) {
+            console.error('Erro ao buscar os resultados do teste FMS:', error);
+        }
+    };
     return (
         <div>
             <Row gutter={16}>
@@ -148,38 +198,36 @@ const Perfil: React.FC = () => {
                 )}
             </div>
 
-            {/* Seção MACS */}
-            <div className="section centered">
-                <Title level={3}>MACS</Title>
-                {paciente?.macs ? (
-                    <div>
-                        <Text><strong>Resultado:</strong> {paciente?.macs}</Text>
-                        <Button onClick={handleShowMACSModal}>Editar</Button>
-                    </div>
-                ) : (
-                    <div>
-                        <Text>Nenhum resultado disponível.</Text>
-                        <Button onClick={handleShowMACSModal}>Iniciar Teste</Button>
-                    </div>
-                )}
-            </div>
-
             {/* Seção FMS */}
             <div className="section centered">
                 <Title level={3}>FMS</Title>
-                {paciente?.fms ? (
+                {resultadosFMS['5m'] !== '' || resultadosFMS['50m'] !== '' || resultadosFMS['500m'] !== '' ? (
                     <div>
-                        <Text><strong>Resultado:</strong> {paciente?.fms}</Text>
-                        <Button onClick={handleShowFMSModal}>Editar</Button>
+                        <Card>
+                            <Title level={4}>Resultados do Teste FMS</Title>
+                            <div>
+                                <Text><strong>5m:</strong> {resultadosFMS['5m']}</Text>
+                            </div>
+                            <div>
+                                <Text><strong>50m:</strong> {resultadosFMS['50m']}</Text>
+                            </div>
+                            <div>
+                                <Text><strong>500m:</strong> {resultadosFMS['500m']}</Text>
+                            </div>
+                            <div style={{ marginTop: '16px' }}>
+                                <Button onClick={handleExcluirTesteFMS} danger>Excluir</Button>
+                                <Button onClick={handleRefazerTesteFMS} style={{ marginLeft: '8px' }}>Refazer Teste</Button>
+                            </div>
+                        </Card>
                     </div>
                 ) : (
                     <div>
                         <Text>Nenhum resultado disponível.</Text>
+                        {/* Botão para iniciar teste FMS */}
                         <Button onClick={handleShowFMSModal}>Iniciar Teste</Button>
                     </div>
                 )}
             </div>
-
             {/* Modais para GMFCS, MACS e FMS */}
             <Modal
                 title="GMFCS - Editar Resultado"
@@ -188,13 +236,7 @@ const Perfil: React.FC = () => {
             // Implemente o conteúdo do modal GMFCS aqui
             />
 
-            <Modal
-                title="MACS - Editar Resultado"
-                visible={showMACSModal}
-                onCancel={() => setShowMACSModal(false)}
-            // Implemente o conteúdo do modal MACS aqui
-            />
-            <FMSModal showFMSModal={showFMSModal} idpaciente = {paciente?.id} setShowFMSModal={setShowFMSModal} />
+            <FMSModal showFMSModal={showFMSModal} idpaciente={paciente?.id} setShowFMSModal={setShowFMSModal} buscarResultadosFMS={buscarResultadosFMS} />
         </div>
     );
 };

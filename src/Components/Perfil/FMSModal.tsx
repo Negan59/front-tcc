@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Row, Col, Radio, Button } from 'antd';
+import { Modal, Row, Col, Radio, Button,message } from 'antd';
 import { error } from 'console';
 
 interface OptionProps {
@@ -33,7 +33,7 @@ const OptionButton: React.FC<OptionProps> = ({ value, selected, onChange, imageU
   </Col>
 );
 
-const FMSModal: React.FC<{ showFMSModal: boolean; idpaciente: Number | undefined; setShowFMSModal: (show: boolean) => void }> = ({ showFMSModal, setShowFMSModal, idpaciente }) => {
+const FMSModal: React.FC<{ showFMSModal: boolean; idpaciente: Number | undefined; setShowFMSModal: (show: boolean) => void; buscarResultadosFMS:()=>void}> = ({ showFMSModal, setShowFMSModal, idpaciente ,buscarResultadosFMS}) => {
   const [selectedOption1, setSelectedOption1] = useState<string>('');
   const [selectedOption2, setSelectedOption2] = useState<string>('');
   const [selectedOption3, setSelectedOption3] = useState<string>('');
@@ -77,27 +77,27 @@ const FMSModal: React.FC<{ showFMSModal: boolean; idpaciente: Number | undefined
 
   const saveQuestionnaire = async () => {
     let hasCompletedFMS = false;
-
+  
+    // Código para verificar se o paciente já completou o teste FMS
     await fetch(`https://gui-tcc.azurewebsites.net/api/fms/${idpaciente}`)
       .then((response) => response.json())
       .then((data) => {
         console.log(data)
         if (data.length > 0) {
-          alert("Paciente já realizou o teste FMS");
+          message.error("Paciente já realizou o teste FMS");
           hasCompletedFMS = true;
         }
       })
       .catch((error) => {
-        console.error('Erro ao pesquisar monitores:', error);
+        message.error('Erro ao pesquisar monitores:', error);
       });
-
+  
     if (!hasCompletedFMS) {
+      // Código para salvar as respostas do questionário FMS
       for (let i = 1; i <= 3; i++) {
         const selectedOption = i === 1 ? selectedOption1 : i === 2 ? selectedOption2 : selectedOption3;
-
         const { nivel, descricao } = getNivelDescricao(selectedOption);
-
-        // Aqui você pode enviar os dados para o backend com as variáveis 'idpaciente', 'i' (questão), 'nivel' e 'descricao'
+  
         const formData = {
           paciente: {
             id: idpaciente,
@@ -106,7 +106,7 @@ const FMSModal: React.FC<{ showFMSModal: boolean; idpaciente: Number | undefined
           nivel,
           descricao,
         };
-
+  
         await fetch('https://gui-tcc.azurewebsites.net/api/fms', {
           method: 'POST',
           headers: {
@@ -114,18 +114,26 @@ const FMSModal: React.FC<{ showFMSModal: boolean; idpaciente: Number | undefined
           },
           body: JSON.stringify(formData),
         })
-          .then((response) => response.json())
-          .then((data) => {
-            // Lógica para lidar com a resposta da API, se necessário
-            console.log('Resposta da API:', data);
-          })
-          .catch((error) => {
-            console.error('Erro ao salvar os dados:', error);
-          });
+        .then((response) => response.json())
+        .then((data) => {
+          // Lógica para lidar com a resposta da API, se necessário
+          console.log('Resposta da API:', data);
+        })
+        .catch((error) => {
+          console.error('Erro ao salvar os dados:', error);
+        });
       }
+  
+      // Após salvar, limpar as respostas e fechar o modal
+      setSelectedOption1('');
+      setSelectedOption2('');
+      setSelectedOption3('');
+      // Definir o estado para fechar o modal
+      await buscarResultadosFMS()
+      message.success("Teste realizado com sucesso!!!")
+      setShowFMSModal(false);
     }
   };
-
 
   return (
     <Modal
